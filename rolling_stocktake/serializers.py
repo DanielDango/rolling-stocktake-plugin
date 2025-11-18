@@ -16,9 +16,15 @@ class RollingStocktakeSerializer(serializers.Serializer):
 
         fields = [
             "items",
+            "stocktake_date",
+            "creation_date",
         ]
 
     items = StockItemSerializer(
         many=True,
         read_only=True,
     )
+
+    stocktake_date = serializers.DateField(read_only=True, allow_null=True)
+
+    creation_date = serializers.DateField(read_only=True, allow_null=True)

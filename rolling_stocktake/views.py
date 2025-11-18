@@ -40,9 +40,20 @@ class RollingStocktakeView(APIView):
 
         stock_items = rolling_stocktake_plugin.get_stock_items(request.user)
 
+        # Get the oldest item's dates for backward compatibility
+        oldest_item = stock_items[0] if stock_items else None
+        stocktake_date = (
+            getattr(oldest_item, "stocktake_date", None) if oldest_item else None
+        )
+        creation_date = (
+            getattr(oldest_item, "creation_date", None) if oldest_item else None
+        )
+
         response_serializer = self.serializer_class(
             instance={
                 "items": stock_items,
+                "stocktake_date": stocktake_date,
+                "creation_date": creation_date,
             }
         )
 

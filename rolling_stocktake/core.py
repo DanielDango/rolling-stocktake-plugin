@@ -150,11 +150,11 @@ class RollingStocktake(
             # Return only the single oldest item
             return [oldest_item]
         elif scope == "LOCATION":
-            # Return all items at the same location
+            # Return all items of the same part at the same location
             location = oldest_item.location
             if location:
-                # Filter items by the same location
-                location_items = items.filter(location=location)
+                # Filter items by the same part and location
+                location_items = items.filter(part=oldest_item.part, location=location)
             else:
                 # If no location, return items without location for the same part
                 location_items = items.filter(
