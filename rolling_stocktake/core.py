@@ -71,10 +71,26 @@ class RollingStocktake(
             "default": True,
             "validator": bool,
         },
+        "STOCKTAKE_SCOPE": {
+            "name": "Stocktake Scope",
+            "description": "Determine which stock items to present for stocktake: Single Item (oldest item only), Location (all items at the same location), or All (all items of the same part)",
+            "default": "ITEM",
+            "choices": [
+                ("ITEM", "Single Item"),
+                ("LOCATION", "Stock Location"),
+                ("ALL", "All Items of Part"),
+            ],
+        },
     }
 
-    def get_oldest_stock_item(self, user):
-        """Return the 'oldest' StockItem which should be counted next by the given user."""
+    def get_stock_items(self, user):
+        """Return StockItem(s) which should be counted next by the given user.
+
+        Returns a list of items based on the STOCKTAKE_SCOPE setting:
+        - ITEM: Single oldest item
+        - LOCATION: All items at the same location as the oldest item
+        - ALL: All items of the same part as the oldest item
+        """
 
         from InvenTree.helpers import current_date
         from stock.models import StockItem
@@ -90,7 +106,7 @@ class RollingStocktake(
 
             # Already reached the daily limit
             if stocakes >= daily_limit:
-                return None
+                return []
 
         # Start with a list of "in stock" items
         items = StockItem.objects.filter(StockItem.IN_STOCK_FILTER)
@@ -121,7 +137,37 @@ class RollingStocktake(
 
         items = items.order_by("oldest_date")
 
-        return items.first()
+        # Get the oldest item
+        oldest_item = items.first()
+
+        if not oldest_item:
+            return []
+
+        # Get the scope setting
+        scope = self.get_setting("STOCKTAKE_SCOPE", backup_value="ITEM")
+
+        if scope == "ITEM":
+            # Return only the single oldest item
+            return [oldest_item]
+        elif scope == "LOCATION":
+            # Return all items at the same location
+            location = oldest_item.location
+            if location:
+                # Filter items by the same location
+                location_items = items.filter(location=location)
+            else:
+                # If no location, return items without location for the same part
+                location_items = items.filter(
+                    location__isnull=True, part=oldest_item.part
+                )
+            return list(location_items)
+        elif scope == "ALL":
+            # Return all items of the same part
+            part_items = items.filter(part=oldest_item.part)
+            return list(part_items)
+        else:
+            # Default to single item
+            return [oldest_item]
 
     # Respond to InvenTree events (from EventMixin)
     # Ref: https://docs.inventree.org/en/latest/plugins/mixins/event/
@@ -162,21 +208,23 @@ class RollingStocktake(
 
         items = []
 
-        items.append({
-            "key": "rolling-stocktake-dashboard",
-            "title": "Rolling Stocktake Dashboard Item",
-            "description": "Display a stock item which needs to be counted next",
-            "icon": "ti:dashboard:outline",
-            "source": self.plugin_static_file(
-                "Dashboard.js:renderRollingStocktakeDashboardItem"
-            ),
-            "context": {
-                "settings": self.get_settings_dict(),
-            },
-            "options": {
-                "width": 4,
-                "height": 3,
-            },
-        })
+        items.append(
+            {
+                "key": "rolling-stocktake-dashboard",
+                "title": "Rolling Stocktake Dashboard Item",
+                "description": "Display a stock item which needs to be counted next",
+                "icon": "ti:dashboard:outline",
+                "source": self.plugin_static_file(
+                    "Dashboard.js:renderRollingStocktakeDashboardItem"
+                ),
+                "context": {
+                    "settings": self.get_settings_dict(),
+                },
+                "options": {
+                    "width": 4,
+                    "height": 3,
+                },
+            }
+        )
 
         return items

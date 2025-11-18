@@ -32,17 +32,17 @@ class RollingStocktakeView(APIView):
     serializer_class = RollingStocktakeSerializer
 
     def get(self, request, *args, **kwargs):
-        """Override the GET method to return example data."""
+        """Override the GET method to return stock items for stocktake."""
 
         from plugin import registry
 
         rolling_stocktake_plugin = registry.get_plugin("rolling-stocktake")
 
-        stock_item = rolling_stocktake_plugin.get_oldest_stock_item(request.user)
+        stock_items = rolling_stocktake_plugin.get_stock_items(request.user)
 
         response_serializer = self.serializer_class(
             instance={
-                "item": stock_item,
+                "items": stock_items,
             }
         )
 
