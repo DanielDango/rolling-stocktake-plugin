@@ -208,23 +208,23 @@ class RollingStocktake(
 
         items = []
 
-        items.append(
-            {
-                "key": "rolling-stocktake-dashboard",
-                "title": "Rolling Stocktake Dashboard Item",
-                "description": "Display a stock item which needs to be counted next",
-                "icon": "ti:dashboard:outline",
-                "source": self.plugin_static_file(
-                    "Dashboard.js:renderRollingStocktakeDashboardItem"
-                ),
-                "context": {
-                    "settings": self.get_settings_dict(),
-                },
-                "options": {
-                    "width": 4,
-                    "height": 3,
-                },
-            }
-        )
+        # fmt: off
+        items.append({
+            "key": "rolling-stocktake-dashboard",
+            "title": "Rolling Stocktake Dashboard Item",
+            "description": "Display a stock item which needs to be counted next",
+            "icon": "ti:dashboard:outline",
+            "source": self.plugin_static_file(
+                "Dashboard.js:renderRollingStocktakeDashboardItem"
+            ),
+            "context": {
+                "settings": self.get_settings_dict(),
+            },
+            "options": {
+                "width": 4,
+                "height": 3,
+            },
+        })
+        # fmt: on
 
         return items
