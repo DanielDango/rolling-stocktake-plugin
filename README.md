@@ -19,11 +19,16 @@ The plugin provides the following features:
 
 ### Dashboard Widget
 
-Users are presented with a custom widget on their dashboard, which automatically fetches a single stock item which is due for stocktake:
+Users are presented with a custom widget on their dashboard, which automatically fetches stock items which are due for stocktake:
 
 ![Dashboard Widget](docs/dashboard.png)
 
-This widget allows users to quickly and easily perform stocktake operations on individual items. Once stocktake has been performed on a given item, the next item which is due for stocktake is automatically fetched.
+This widget allows users to quickly and easily perform stocktake operations on items. The plugin can be configured to display:
+- A single stock item (default behavior)
+- All stock items at the same location as the oldest item
+- All stock items of the same part as the oldest item
+
+Users can count items individually or all at once. Once stocktake has been performed, the next set of items which are due for stocktake is automatically fetched.
 
 ## Installation
 
@@ -58,5 +63,6 @@ The plugin can be configured via the InvenTree plugin interface. The following s
 | Ignore External Locations | Ignore stock items which are located in external locations |
 | Daily Limit | Maximum number of stock items to process per day (per user). |
 | Allowed Group | Specify a group which is allowed to perform rolling stocktake operations. Leave blank to allow all users to perform stocktake operations. |
+| Stocktake Scope | Determine which stock items to present for stocktake: Single Item (oldest item only), Location (all items at the same location), or All (all items of the same part). Default: Single Item. |
 
 ![Plugin Settings](docs/settings.png)
