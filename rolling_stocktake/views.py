@@ -32,17 +32,29 @@ class RollingStocktakeView(APIView):
     serializer_class = RollingStocktakeSerializer
 
     def get(self, request, *args, **kwargs):
-        """Override the GET method to return example data."""
+        """Override the GET method to return stock items for stocktake."""
 
         from plugin import registry
 
         rolling_stocktake_plugin = registry.get_plugin("rolling-stocktake")
 
-        stock_item = rolling_stocktake_plugin.get_oldest_stock_item(request.user)
+        stock_items = rolling_stocktake_plugin.get_stock_items(request.user)
+
+        # Get the oldest item's dates for backward compatibility
+        # These dates are passed directly to the serializer and will be included in the response
+        oldest_item = stock_items[0] if stock_items else None
+        stocktake_date = (
+            getattr(oldest_item, "stocktake_date", None) if oldest_item else None
+        )
+        creation_date = (
+            getattr(oldest_item, "creation_date", None) if oldest_item else None
+        )
 
         response_serializer = self.serializer_class(
             instance={
-                "item": stock_item,
+                "items": stock_items,
+                "stocktake_date": stocktake_date,
+                "creation_date": creation_date,
             }
         )
 
