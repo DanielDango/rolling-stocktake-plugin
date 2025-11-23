@@ -81,6 +81,12 @@ class RollingStocktake(
                 ("ALL", "All Items of Part"),
             ],
         },
+        "INCLUDE_SUBLOCATIONS": {
+            "name": "Include Sublocations",
+            "description": "When using Location scope, include items from sublocations of the selected location",
+            "default": False,
+            "validator": bool,
+        },
     }
 
     def get_stock_items(self, user):
@@ -152,9 +158,19 @@ class RollingStocktake(
         elif scope == "LOCATION":
             # Return all items of the same part at the same location
             location = oldest_item.location
+            include_sublocations = self.get_setting("INCLUDE_SUBLOCATIONS", backup_value=False)
+
             if location:
                 # Filter items by the same part and location
-                location_items = items.filter(part=oldest_item.part, location=location)
+                if include_sublocations:
+                    # Include items in sublocations by filtering items where location path starts with this location
+                    location_items = items.filter(
+                        part=oldest_item.part,
+                        location__in=location.get_descendants(include_self=True)
+                    )
+                else:
+                    # Only include items at the exact same location
+                    location_items = items.filter(part=oldest_item.part, location=location)
             else:
                 # If no location, return items without location for the same part
                 location_items = items.filter(
