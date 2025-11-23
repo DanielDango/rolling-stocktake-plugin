@@ -22,11 +22,10 @@ import {
   IconCircleCheck,
   IconClipboardCheck,
   IconEye,
-  IconRefresh,
-  IconTrash
+  IconRefresh
 } from '@tabler/icons-react';
 import { QueryClient, useQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { LocalizedComponent } from './locale';
 
 const queryClient = new QueryClient();
@@ -35,20 +34,16 @@ const NEXT_ITEM_URL: string = '/plugin/rolling-stocktake/next/';
 
 function RenderStockItem({
   context,
-  onCount,
-  onDelete,
   item
 }: {
   context: InvenTreePluginContext;
   item: any;
-  onCount: () => void;
-  onDelete: () => void;
 }) {
-  const navigateToItem = useCallback(() => {
+  const navigateToItem = () => {
     if (item?.pk) {
       context.navigate(getDetailUrl(ModelType.stockitem, item.pk));
     }
-  }, [item]);
+  };
 
   return (
     <Table.Tr>
@@ -92,22 +87,6 @@ function RenderStockItem({
           >
             <IconEye size={16} />
           </ActionIcon>
-          <ActionIcon
-            color='green'
-            variant='light'
-            onClick={onCount}
-            title={t`Count Stock`}
-          >
-            <IconClipboardCheck size={16} />
-          </ActionIcon>
-          <ActionIcon
-            color='red'
-            variant='light'
-            onClick={onDelete}
-            title={t`Delete Item`}
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
         </Group>
       </Table.Td>
     </Table.Tr>
@@ -122,14 +101,6 @@ function RenderStockItems({
   items: any[];
 }) {
   const countStockForm: any = context?.forms.stockActions.countStock({
-    items: items || [],
-    model: ModelType.stockitem,
-    refresh: () => {
-      queryClient.invalidateQueries({ queryKey: ['next-item'] });
-    }
-  });
-
-  const deleteStockForm = context?.forms.stockActions.deleteStock({
     items: items || [],
     model: ModelType.stockitem,
     refresh: () => {
@@ -152,7 +123,6 @@ function RenderStockItems({
   return (
     <Stack gap='xs'>
       {countStockForm?.modal}
-      {deleteStockForm?.modal}
       <Table>
         <Table.Thead>
           <Table.Tr>
@@ -164,37 +134,7 @@ function RenderStockItems({
         </Table.Thead>
         <Table.Tbody>
           {items.map((item) => (
-            <RenderStockItem
-              key={item.pk}
-              context={context}
-              item={item}
-              onCount={() => {
-                context?.forms.stockActions
-                  .countStock({
-                    items: [item],
-                    model: ModelType.stockitem,
-                    refresh: () => {
-                      queryClient.invalidateQueries({
-                        queryKey: ['next-item']
-                      });
-                    }
-                  })
-                  .open();
-              }}
-              onDelete={() => {
-                context?.forms.stockActions
-                  .deleteStock({
-                    items: [item],
-                    model: ModelType.stockitem,
-                    refresh: () => {
-                      queryClient.invalidateQueries({
-                        queryKey: ['next-item']
-                      });
-                    }
-                  })
-                  .open();
-              }}
-            />
+            <RenderStockItem key={item.pk} context={context} item={item} />
           ))}
         </Table.Tbody>
       </Table>
