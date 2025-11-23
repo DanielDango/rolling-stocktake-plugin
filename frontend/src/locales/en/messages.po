@@ -13,51 +13,67 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/Dashboard.tsx:56
-msgid "All up to date!"
-msgstr "All up to date!"
+#: src/Dashboard.tsx:72
+msgid "No location"
+msgstr "No location"
 
-#: src/Dashboard.tsx:57
-msgid "Nice work, you have counted enough items today."
-msgstr "Nice work, you have counted enough items today."
-
-#: src/Dashboard.tsx:67
-msgid "Stock Item"
-msgstr "Stock Item"
-
-#: src/Dashboard.tsx:77
-msgid "Location"
-msgstr "Location"
+#: src/Dashboard.tsx:81
+msgid "Never"
+msgstr "Never"
 
 #: src/Dashboard.tsx:91
-msgid "Created"
-msgstr "Created"
-
-#: src/Dashboard.tsx:98
-msgid "Last Stocktake"
-msgstr "Last Stocktake"
-
-#: src/Dashboard.tsx:104
-msgid "No stocktake data"
-msgstr "No stocktake data"
-
-#: src/Dashboard.tsx:119
 msgid "View Item"
 msgstr "View Item"
 
-#: src/Dashboard.tsx:127
+#: src/Dashboard.tsx:91
+#~ msgid "Created"
+#~ msgstr "Created"
+
+#: src/Dashboard.tsx:99
 msgid "Count Stock"
 msgstr "Count Stock"
 
-#: src/Dashboard.tsx:135
+#: src/Dashboard.tsx:104
+#~ msgid "No stocktake data"
+#~ msgstr "No stocktake data"
+
+#: src/Dashboard.tsx:107
 msgid "Delete Item"
 msgstr "Delete Item"
 
-#: src/Dashboard.tsx:191
+#: src/Dashboard.tsx:144
+msgid "All up to date!"
+msgstr "All up to date!"
+
+#: src/Dashboard.tsx:147
+msgid "Nice work, you have counted enough items today."
+msgstr "Nice work, you have counted enough items today."
+
+#: src/Dashboard.tsx:159
+msgid "Stock Item"
+msgstr "Stock Item"
+
+#: src/Dashboard.tsx:160
+msgid "Location"
+msgstr "Location"
+
+#: src/Dashboard.tsx:161
+msgid "Last Stocktake"
+msgstr "Last Stocktake"
+
+#: src/Dashboard.tsx:162
+msgid "Actions"
+msgstr "Actions"
+
+#: src/Dashboard.tsx:209
+msgid "Count All Items"
+msgstr "Count All Items"
+
+#: src/Dashboard.tsx:241
 msgid "Rolling Stocktake"
 msgstr "Rolling Stocktake"
 
-#: src/Dashboard.tsx:201
+#: src/Dashboard.tsx:251
 msgid "Error loading stock information from server."
 msgstr "Error loading stock information from server."
 
