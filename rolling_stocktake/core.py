@@ -1,6 +1,6 @@
 """Support rolling stocktake for InvenTree"""
 
-from django.db.models import DateField, Min
+from django.db.models import DateField, Min, F
 from django.db.models.functions import Cast, Coalesce
 from django.core.validators import MinValueValidator
 
@@ -58,7 +58,7 @@ class RollingStocktake(
         },
         "DAILY_LIMIT": {
             "name": "Daily Limit",
-            "description": "The maximum number of stock items to be counted by a user in a single day",
+            "description": "The maximum number of stock items to be counted by a user in a single day (set to 0 for unlimited)",
             "default": 5,
             "validator": [
                 int,
@@ -129,7 +129,7 @@ class RollingStocktake(
 
         items = items.annotate(
             oldest_date=Coalesce(
-                "stocktake_date", Min("tracking_info__date"), output_field=DateField()
+                F("stocktake_date"), F("creation_date"), output_field=DateField()
             )
         )
 

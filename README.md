@@ -61,7 +61,7 @@ The plugin can be configured via the InvenTree plugin interface. The following s
 | Setting | Description |
 | --- | --- |
 | Ignore External Locations | Ignore stock items which are located in external locations |
-| Daily Limit | Maximum number of stock items to process per day (per user). |
+| Daily Limit | Maximum number of stock items to process per day (per user). Set to 0 for unlimited. |
 | Allowed Group | Specify a group which is allowed to perform rolling stocktake operations. Leave blank to allow all users to perform stocktake operations. |
 | Stocktake Scope | Determine which stock items to present for stocktake: Single Item (oldest item only), Location (all items at the same location), or All (all items of the same part). Default: Single Item. |
 
