@@ -69,8 +69,8 @@ function RenderStockItem({
         )}
       </Table.Td>
       <Table.Td>
-        {item.last_stocktake ? (
-          <Text size='sm'>{item.last_stocktake}</Text>
+        {item.stocktake_date ? (
+          <Text size='sm'>{item.stocktake_date}</Text>
         ) : (
           <Text c='red' size='sm'>
             {t`Never`}
