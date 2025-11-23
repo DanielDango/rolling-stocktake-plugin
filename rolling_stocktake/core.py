@@ -224,7 +224,6 @@ class RollingStocktake(
 
         items = []
 
-        # fmt: off
         items.append({
             "key": "rolling-stocktake-dashboard",
             "title": "Rolling Stocktake Dashboard Item",
@@ -241,6 +240,5 @@ class RollingStocktake(
                 "height": 3,
             },
         })
-        # fmt: on
 
         return items

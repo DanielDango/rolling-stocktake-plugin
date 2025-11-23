@@ -206,7 +206,7 @@ function RenderStockItems({
           leftSection={<IconClipboardCheck />}
           onClick={countStockForm.open}
         >
-          {t`Count All Items`}
+          {t`Count Stock`}
         </Button>
       </Group>
     </Stack>
