@@ -73,19 +73,14 @@ class RollingStocktake(
         },
         "STOCKTAKE_SCOPE": {
             "name": "Stocktake Scope",
-            "description": "Determine which stock items to present for stocktake: Single Item (oldest item only), Location (all items at the same location), or All (all items of the same part)",
+            "description": "Determine which stock items to present for stocktake: Single Item (oldest item only), Location (all items at the same location), Location with Sublocations (all items at the same location including sublocations), or All (all items of the same part)",
             "default": "ITEM",
             "choices": [
                 ("ITEM", "Single Item"),
                 ("LOCATION", "Stock Location"),
+                ("LOCATION_WITH_SUBLOCATIONS", "Stock Location with Sublocations"),
                 ("ALL", "All Items of Part"),
             ],
-        },
-        "INCLUDE_SUBLOCATIONS": {
-            "name": "Include Sublocations",
-            "description": "When using Location scope, include items from sublocations of the selected location",
-            "default": False,
-            "validator": bool,
         },
     }
 
@@ -94,7 +89,8 @@ class RollingStocktake(
 
         Returns a list of items based on the STOCKTAKE_SCOPE setting:
         - ITEM: Single oldest item
-        - LOCATION: All items at the same location as the oldest item
+        - LOCATION: All items at the same location as the oldest item (same location only)
+        - LOCATION_WITH_SUBLOCATIONS: All items at the same location as the oldest item (including sublocations)
         - ALL: All items of the same part as the oldest item
         """
 
@@ -156,21 +152,28 @@ class RollingStocktake(
             # Return only the single oldest item
             return [oldest_item]
         elif scope == "LOCATION":
-            # Return all items of the same part at the same location
+            # Return all items of the same part at the same location (same location only)
             location = oldest_item.location
-            include_sublocations = self.get_setting("INCLUDE_SUBLOCATIONS", backup_value=False)
 
             if location:
-                # Filter items by the same part and location
-                if include_sublocations:
-                    # Include items in sublocations by filtering items where location path starts with this location
-                    location_items = items.filter(
-                        part=oldest_item.part,
-                        location__in=location.get_descendants(include_self=True)
-                    )
-                else:
-                    # Only include items at the exact same location
-                    location_items = items.filter(part=oldest_item.part, location=location)
+                # Filter items by the same part and location (exact location only)
+                location_items = items.filter(part=oldest_item.part, location=location)
+            else:
+                # If no location, return items without location for the same part
+                location_items = items.filter(
+                    location__isnull=True, part=oldest_item.part
+                )
+            return list(location_items)
+        elif scope == "LOCATION_WITH_SUBLOCATIONS":
+            # Return all items of the same part at the same location (including sublocations)
+            location = oldest_item.location
+
+            if location:
+                # Filter items by the same part and location (including sublocations)
+                location_items = items.filter(
+                    part=oldest_item.part,
+                    location__in=location.get_descendants(include_self=True),
+                )
             else:
                 # If no location, return items without location for the same part
                 location_items = items.filter(
