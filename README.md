@@ -1,5 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI](https://img.shields.io/pypi/v/inventree-rolling-stocktake)](https://pypi.org/project/inventree-rolling-stocktake/)
+[![PyPI](https://img.shields.io/pypi/v/dango-inventree-rolling-stocktake)](https://pypi.org/project/dango-inventree-rolling-stocktake/)
 ![PEP](https://github.com/inventree/rolling-stocktake-plugin/actions/workflows/ci.yaml/badge.svg)
 
 # Rolling Stocktake Plugin
@@ -50,7 +50,7 @@ The simplest way to install this plugin is from the InvenTree plugin interface. 
 To install manually via the command line, run the following command:
 
 ```bash
-pip install rolling-stocktake
+pip install dango-inventree-rolling-stocktake
 ```
 
 *Note: You must be operating within the InvenTree virtual environment!*

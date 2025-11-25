@@ -8,7 +8,7 @@ requires = ["setuptools", "twine", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inventree-rolling-stocktake"
+name = "dango-inventree-rolling-stocktake"
 description = "Support rolling stocktake for InvenTree"
 dynamic = ["version"]
 authors = [
