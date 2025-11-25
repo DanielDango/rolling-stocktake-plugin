@@ -235,10 +235,6 @@ class RollingStocktake(
             "context": {
                 "settings": self.get_settings_dict(),
             },
-            "options": {
-                "width": 4,
-                "height": 3,
-            },
         })
 
         return items
