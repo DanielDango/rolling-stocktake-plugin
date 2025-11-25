@@ -38,6 +38,23 @@ class RollingStocktakeView(APIView):
 
         rolling_stocktake_plugin = registry.get_plugin("rolling-stocktake")
 
+        # Check if the user is in the allowed group (if configured)
+        user_group = rolling_stocktake_plugin.get_setting("USER_GROUP")
+
+        if user_group:
+            # Check if the user is a member of the required group
+            if not request.user.groups.filter(pk=user_group).exists():
+                # User is not in the allowed group - return empty response
+                return Response(
+                    {
+                        "items": [],
+                        "stocktake_date": None,
+                        "creation_date": None,
+                        "error": "User does not have permission to perform stocktake operations",
+                    },
+                    status=403,
+                )
+
         stock_items = rolling_stocktake_plugin.get_stock_items(request.user)
 
         # Get the oldest item's dates for backward compatibility

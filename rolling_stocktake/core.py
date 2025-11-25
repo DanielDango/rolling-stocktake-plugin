@@ -221,9 +221,17 @@ class RollingStocktake(
     def get_ui_dashboard_items(self, request, context: dict, **kwargs):
         """Return a list of custom dashboard items to be rendered in the InvenTree user interface."""
 
-        # Example: only display for 'staff' users
-        if not request.user or not request.user.is_staff:
+        # Check if user has permission based on the configured group
+        if not request.user or not request.user.is_authenticated:
             return []
+
+        # Check if the user is in the allowed group (if configured)
+        user_group = self.get_setting("USER_GROUP")
+
+        if user_group and user_group != "":
+            # Only show widget to users in the allowed group
+            if not request.user.groups.filter(pk=user_group).exists():
+                return []
 
         items = []
 
